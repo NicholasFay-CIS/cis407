@@ -22,4 +22,3 @@ def main():
 	else:
 		player2 = "O"
 	create_board(player_array)
->>>>>>> creation
