@@ -1,24 +1,47 @@
 #MAIN for TIC TACK TOE
 #seting up repo
-def create_board(player_array):
-	print("|--------|--------|--------|")
-	print("|  {}    |  {}    |  {}    |".format(player_array[0], player_array[1], player_array[2]))
-	print("|________|________|________|")
-	print("|  {}    |  {}    |  {}    |".format(player_array[3], player_array[4], player_array[5]))
-	print("|________|________|________|")
-	print("|  {}    |  {}    |  {}    |".format(player_array[6], player_array[7], player_array[8]))
-	print("|________|________|________|")
+#MAIN for TIC TACK TOE
+#seting up repo
+import sys
+
+def print_board(player_array):
+	i = 0
+	for row in player_array:
+		print("{} {}".format(i, row))
+		i += 1
+	print("    0    1    2")
+    
+def create_board():
+	"""
+	None -> list (oflists)
+	"""
+	board = []
+	row1 = ["_"] * 3
+	board.append(row1)
+	row2 = ["_"] * 3
+	board.append(row2)
+	row3 = ["_"] * 3
+	board.append(row3)
+	return board
 
 
-
-
-def main():
+def init():
 	#Establish Player 1
-	player_array = [None] * 9
-	player1 = raw_input("Please choose either X or O:   ")
+	player1 = None
+	while(player1 != "O" and player1 != "X"):
+		player1 = input("Please choose either X or O:   ")
 	#Based on player 1 establish player2
 	if(player1 == "O"):
 		player2 = "X"
 	else:
 		player2 = "O"
-	create_board(player_array)
+	print("Player 2, you are {}".format(player2))
+	board = create_board()
+	print_board(board)
+	return board
+
+
+def main():
+	board = init()
+
+main()
