@@ -126,6 +126,18 @@ def player_won(board):
 		sys.exit()
 	return
 
+def tie(moves_made):
+	"""
+	None -> None
+	This function determines if there are any
+	possible moves left to make. If not then it is a tie
+	"""
+	if(8 == moves_made):
+		print("TIE GAME!!")
+		sys.exit()
+	moves_made += 1
+	return moves_made
+
 def main():
 	"""
 	None -> None
@@ -133,6 +145,7 @@ def main():
 	"""
 	board = init()
 	turn = P1.name
+	moves_made = 0
 	while(True):
 		if(turn == P1.name):
 			player_move(board, P1)
@@ -142,5 +155,5 @@ def main():
 			turn = P1.name
 		print_board(board)
 		player_won(board)
-
+		moves_made = tie(moves_made)
 main()
