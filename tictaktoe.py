@@ -1,6 +1,7 @@
 #Nicholas David Fay
 #Tic Tak Toe Game
 #CIS 407
+#Eric W.
 
 ##################################
 #imports
@@ -138,6 +139,11 @@ def player_won(board):
 	return
 
 def count_tiles_on_board(board):
+	"""
+	list -> int
+	This function goes through the board 
+	and determines how many tiles are currently placed on the board
+	"""
 	tiles = 0
 	for row in board:
 		for tile in row:
@@ -178,10 +184,15 @@ def main():
 			#same as above just vice versa
 			player_move(board, P2)
 			turn = P1.name
+		#get the tile count on the current board
 		tiles_on_board = count_tiles_on_board(board)
+		#print the board
 		print_board(board, tiles_on_board)
+		#check if a player has won the game
 		player_won(board)
+		#check to see if the two players have tied
 		tie(tiles_on_board)
+	return
 		 
 #call to main program
 main()
