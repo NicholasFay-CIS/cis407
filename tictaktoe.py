@@ -2,6 +2,7 @@
 #Tic Tak Toe Game
 #CIS 407
 
+##################################
 #imports
 from collections import namedtuple
 import sys
@@ -13,10 +14,12 @@ P1.name = "player1"
 P2 = namedtuple('P2','name tile')
 P2.name = "player2"
 tile_list = ["X", "O"]
+X = "X"
+O = "O"
 
 """ Functions """
 
-def print_board(board_array):
+def print_board(board_array, tiles):
 	"""
 	list (of lists) -> None
 	This function is in chare of printing the board 
@@ -24,9 +27,12 @@ def print_board(board_array):
 	"""
 	i = 0
 	for row in board_array:
-		print("{} {}".format(i, row))
+		print("{}   |{}| |{}| |{}|".format(i, row[0], row[1], row[2]))
+		print("")
 		i += 1
-	print("    0    1    2")
+	print("")
+	print("    0    1   2")
+	print("Tiles on board: {}\n".format(tiles))
 	return
     
 def create_board():
@@ -44,7 +50,7 @@ def create_board():
 	board.append(row3)
 	return board
 
-def init():
+def init(tiles):
 	"""
 	None -> list (of lists)
 	This function initializes players, as well as creates 
@@ -53,18 +59,18 @@ def init():
 	print("------Tic Tak Toe Terminal------\nIn this version of Tic Tak Toe you must select 2 things to place a tile\n1) row number\n2) column number.\n Keep this in mind!")
 	#Establish Player 1
 	player1 = None
-	while(player1 != "O" and player1 != "X"):
+	while((player1 != O and player1 != X)):
 		player1 = input("Player 1: Please choose either X or O:   ")
-	#Based on player 1 establish player2
-	if(player1 == "O"):
-		player2 = "X"
+	#Based on player 1's entry establish player2
+	if(player1 == O):
+		player2 = X
 	else:
-		player2 = "O"
+		player2 = O
 	P1.tile = player1
 	P2.tile = player2
 	print("Player 2, you are {}".format(player2))
 	board = create_board()
-	print_board(board)
+	print_board(board, tiles)
 	return board
 
 def player_move(board, player):
@@ -73,11 +79,16 @@ def player_move(board, player):
 	This function updates the board arrays with the 
 	given players move selection
 	"""
-	print("{} it is your turn.".format(player.name))
-	row = int(input("Enter the row you want to select (i.e 0-2): "))
-	column = int(input("Enter the column you want to select (i.e 0-2): "))
+	print("\n{} it is your turn.".format(player.name))
+	try:
+		row = int(input("Enter the row you want to select (i.e 0-2): "))
+		column = int(input("Enter the column you want to select (i.e 0-2): "))
+	except:
+		print("Error: Non number given. Try again")
+		player_move
+		return
 	if(board[row][column] in tile_list):
-		print("Error: A tile already exists there...try again")
+		print("Error: Tile alrady on location row:{} col:{}".format(row, column))
 		player_move(board, player)
 		return
 	board[row][column] = player.tile
@@ -126,34 +137,51 @@ def player_won(board):
 		sys.exit()
 	return
 
+def count_tiles_on_board(board):
+	tiles = 0
+	for row in board:
+		for tile in row:
+			if(tile == X or tile == O):
+				tiles += 1
+	return tiles
+
 def tie(moves_made):
 	"""
 	None -> None
 	This function determines if there are any
 	possible moves left to make. If not then it is a tie
 	"""
-	if(8 == moves_made):
+	if(9 == moves_made):
 		print("TIE GAME!!")
 		sys.exit()
-	moves_made += 1
-	return moves_made
+	return
 
 def main():
 	"""
 	None -> None
 	This is the main function
 	"""
-	board = init()
+	#initialize board
+	tiles_on_board = 0
+	board = init(0)
+	#get the turn flag
 	turn = P1.name
-	moves_made = 0
+	#until the game is ended (There is a win: or a tie)
 	while(True):
+		#if its player ones turn
 		if(turn == P1.name):
+			#player one takes a move
 			player_move(board, P1)
+			#then switches to player two
 			turn = P2.name
 		else:
+			#same as above just vice versa
 			player_move(board, P2)
 			turn = P1.name
-		print_board(board)
+		tiles_on_board = count_tiles_on_board(board)
+		print_board(board, tiles_on_board)
 		player_won(board)
-		moves_made = tie(moves_made)
+		tie(tiles_on_board)
+		 
+#call to main program
 main()
