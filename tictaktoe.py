@@ -86,7 +86,7 @@ def player_move(board, player):
 		column = int(input("Enter the column you want to select (i.e 0-2): "))
 	except:
 		print("Error: Non number given. Try again")
-		player_move
+		player_move(board, player)
 		return
 	if(board[row][column] in tile_list):
 		print("Error: Tile alrady on location row:{} col:{}".format(row, column))
