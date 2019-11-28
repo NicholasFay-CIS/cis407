@@ -1,5 +1,5 @@
 #Nicholas David Fay
-#AI Tic Tak Toe Game
+#AI Tic Tac Toe Game
 #CIS 407
 #Prof. Eric W.
 ##################################
