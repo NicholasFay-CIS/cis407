@@ -320,7 +320,7 @@ def main():
 			elif(won == 1):
 				print("---------GAME OVER:::{} Wins---------".format(P1.name))
 			else:
-				print("---------GAME OVER:::Tie Game---------".format(P1.name))
+				print("---------GAME OVER:::Tie Game---------")
 			check_replay()
 	return
 		 
