@@ -72,7 +72,7 @@ def init(tiles):
 	This function initializes players, as well as creates 
 	the board for play, then returns the board
 	"""
-	print("------Tic Tak Toe Terminal------\nIn this version of Tic Tak Toe you must select 2 things to place a tile\n1) row number\n2) column number.\n Keep this in mind!")
+	print("------Tic Tak Toe------\nIn this version of Tic Tac Toe you must select 2 things in order to place a tile\n1) row number\n2) column number\n rows/columns are selected with numbers 0,1 or 2")
 	#Establish Player 1
 	player1 = None
 	while((player1 != O and player1 != X)):
@@ -132,17 +132,26 @@ def make_random_move(board):
 	possible_moves = []
 	#iterate through the row options
 	for i in range(0,3):
-		move = namedtuple('move','row col')
 		#iterate through the column options
 		for j in range(0,3):
+			move = []
 			#if that move is a valid move
 			is_free = check_if_space_is_free(board, i, j)
 			if(is_free == True):
-				move.row = i
-				move.col = j
+				print(i,j)
+				move.append(i)
+				move.append(j)
 				possible_moves.append(move)
 	move = random.choice(possible_moves)
 	return move
+
+def check_dups(possible_moves, move):
+	dup = False
+	for item in possible_moves:
+		if(item.col == move.col and item.row == move.row):
+			dup = True
+			return dup
+	return dup
 
 def AI_move(board, player, opponent):
 	"""
@@ -189,7 +198,10 @@ def AI_move(board, player, opponent):
 	#if the AI detects that a tile cannot stop the opponent from winning
 	#as well as the AI winning, make a random move
 	random_move = make_random_move(board)
-	player_move(board,player, random_move)
+	move = namedtuple('move','row col')
+	move.row = random_move[0]
+	move.col = random_move[1]
+	player_move(board,player, move)
 	return
 
 def player_won(board):
