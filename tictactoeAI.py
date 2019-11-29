@@ -138,9 +138,9 @@ def make_random_move(board):
 			#if that move is a valid move
 			is_free = check_if_space_is_free(board, i, j)
 			if(is_free == True):
-				print(i,j)
-				move.append(i)
-				move.append(j)
+				move = namedtuple('move','row col')
+				move.row = i
+				move.col = j
 				possible_moves.append(move)
 	move = random.choice(possible_moves)
 	return move
@@ -198,10 +198,7 @@ def AI_move(board, player, opponent):
 	#if the AI detects that a tile cannot stop the opponent from winning
 	#as well as the AI winning, make a random move
 	random_move = make_random_move(board)
-	move = namedtuple('move','row col')
-	move.row = random_move[0]
-	move.col = random_move[1]
-	player_move(board,player, move)
+	player_move(board,player, random_move)
 	return
 
 def player_won(board):
