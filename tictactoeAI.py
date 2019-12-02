@@ -195,6 +195,17 @@ def AI_move(board, player, opponent):
 				if(won == 1):
 					player_move(board, player, move)
 					return
+	#try to populate a corner
+	corners = [[0,0],[0,2],[2,0],[2,2]]
+	#try to populate the corners to make a winning move
+	for item in corners:
+		free = check_if_space_is_free(board, item[0], item[1])
+		if(free == True):
+			move = namedtuple('move','row col')
+			move.row = item[0]
+			move.col = item[1]
+			player_move(board, player, move)
+			return
 	#if the AI detects that a tile cannot stop the opponent from winning
 	#as well as the AI winning, make a random move
 	random_move = make_random_move(board)
