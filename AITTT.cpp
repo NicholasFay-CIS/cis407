@@ -1,11 +1,12 @@
 #include <iostream>
 #include <string>
+
 using namespace std;
+char game_board[3][3];
 
 class Board {
-    private:
-        char game_board[3][3];
-        int Check_win() {
+    protected:
+        int Check_win(char game_board[3][3]) {
             int col = 0;
             int row = 0;
             for(int i = 0; i < 3; i++) {
@@ -45,10 +46,20 @@ class Board {
                     return 1;
                 }
             }
+            int tie = 1;
+            for(int i = 0; i < 3; i++) {
+                for(int j = 0; j < 3; j++) {
+                    if(game_board[i][j] == '_') {
+                        tie = 0; 
+                    }
+                }
+            }
+            if(tie == 1) {
+                return -2;
+            }
             return -1;
-
         }
-   public:
+    public:
         void make_board() {
             char empty_marker = '_';
             for(int i = 0; i < 3; i++) {
@@ -88,13 +99,90 @@ class Board {
             }
             if(game_board[x][y] == '_') {
                 game_board[x][y] = sign;
-                return Check_win(); 
+                return Check_win(game_board); 
             }
             cout << "Row: " << x << " Column: " << y << " is not available" << endl;
             Make_move(move, sign);
         }
         
 } board;
+
+class AI : protected Board {
+    private:
+        char dup_board[3][3];
+        void make_random_move() {
+            for(int i = 0; i < 3; i++) {
+                for(int j = 0; j< 3; j++) {
+                    if(game_board[i][j] == '_') {
+                        game_board[i][j] = 'O';
+                        return;
+                    }
+                }
+            }
+        }
+    public:
+        void duplicate_board() {
+            for(int i = 0; i < 3; i++) {
+                for(int j = 0; j< 3; j++) {
+                    dup_board[i][j] = game_board[i][j];
+                }
+            }
+        }
+    
+        int Make_AI_Move() {
+            cout << "Looking for win " << endl;
+            for(int i = 0; i < 3; i++) {
+                for(int j = 0; j < 3; j++) {
+                    duplicate_board();
+                    char temp = dup_board[i][j];
+                    if(temp == '_') {
+                        dup_board[i][j] = 'O';
+                        int win = Board::Check_win(dup_board);
+                        if(win == 1) {
+                            game_board[i][j] = 'O';
+                            return Board::Check_win(game_board);
+                        }
+                    }
+
+                }
+            }
+            cout << "Looking for opponent win " << endl;
+            for(int i = 0; i < 3; i++) {
+                for(int j = 0; j < 3; j++) {
+                    duplicate_board();
+                    char temp = dup_board[i][j];
+                    if(temp == '_') {
+                        dup_board[i][j] = 'X';
+                        int win = Board::Check_win(dup_board);
+                        if(win == 0) {
+                            game_board[i][j] = '0';
+                            return Board::Check_win(game_board);
+                        }
+                    }
+
+                }
+            }
+            cout << "Looking for middle piece " << endl;
+            if(game_board[1][1] == '_') {
+                game_board[1][1] = 'O';
+                return Board::Check_win(game_board);
+            }
+            cout << "Looking for open corner " << endl;
+            for(int i = 0; i < 3; i+2) {
+                for(int j = 0; j < 3; j+2) {
+                    char temp = game_board[i][j];
+                    if(temp == '_') {
+                        game_board[i][j] = 'O';
+                        return Board::Check_win(game_board);
+                    }
+                }
+            }
+            cout << "Looking for random move " << endl;
+            make_random_move();
+            return Board::Check_win(game_board);
+        }
+
+} arti;
 
 
 class Players {
@@ -148,6 +236,7 @@ class Players {
 int main() {
     Board board;
     Players players;
+    AI my_ai;
     board.make_board();
     players.Get_players();
     players.Print_Players();
@@ -157,13 +246,22 @@ int main() {
         int win;
         int move = players.Get_player_move();
         char sign = players.Get_player_sign(move);
-        win = board.Make_move(move, sign);
+        if(move == 0) {
+            win = board.Make_move(move, sign);
+        } else {
+            win = my_ai.Make_AI_Move();
+            move--;
+        }
         board.print_board();
         if(win == 0) {
             cout << "GAME OVER! " << players.player1 << " won" << endl;
             break;
         } else if(win == 1) {
             cout << "GAME OVER! " << players.player2 << " won" << endl;
+            break;
+        } else if(win == -2) {
+            cout << "GAME OVER! Tie Game." << endl;
+            break;
         }
     }
     return 0;
